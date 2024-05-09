@@ -69,7 +69,7 @@ else()
     set(ARROW_PACKAGES_TO_LINK parquet_static arrow_static)
   else()
     # use dynamic variants
-    set(ARROW_PACKAGES_TO_LINK parquet_shared arrow_shared)
+    set(ARROW_PACKAGES_TO_LINK parquet arrow)
   endif()
 endif()
 
