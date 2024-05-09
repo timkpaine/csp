@@ -22,13 +22,21 @@ develop: requirements  ## install dependencies and build library
 	python -m pip install -e .[develop]
 
 build:  ## build the library
+ifeq ($(OS),Windows_NT)
+	python setup.py build build_ext --inplace
+else
 	python setup.py build build_ext --inplace -- -- -j$(NPROC)
+endif
 
 build-debug:  ## build the library ( DEBUG ) - May need a make clean when switching from regular build to build-debug and vice versa
 	SKBUILD_CONFIGURE_OPTIONS="" DEBUG=1 python setup.py build build_ext --inplace -- -- -j$(NPROC)
 
 build-conda:  ## build the library in Conda
-	CSP_USE_VCPKG=0 python setup.py build build_ext --inplace -- -- -j$(NPROC)
+ifeq ($(OS),Windows_NT)
+	set CSP_USE_VCPKG=0 && python setup.py build build_ext --inplace
+else
+	CSP_USE_VCPKG=0 python setup.py build build_ext --inplace -- -j$(NPROC)
+endif
 
 install:  ## install library
 	python -m pip install .
