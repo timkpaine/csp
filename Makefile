@@ -98,7 +98,11 @@ test-py: ## Clean and Make unit tests
 	python -m pytest -v csp/tests --junitxml=junit.xml $(TEST_ARGS)
 
 test-cpp: ## Make C++ unit tests
+ifneq ($(OS),Windows_NT)
 	for f in ./csp/tests/bin/*; do $$f; done || (echo "TEST FAILED" && exit 1)
+else
+	run_cpp_tests.bat
+endif
 
 coverage-py:
 	python -m pytest -v csp/tests --junitxml=junit.xml --cov=csp --cov-report xml --cov-report html --cov-branch --cov-fail-under=80 --cov-report term-missing $(TEST_ARGS)
