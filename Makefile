@@ -14,9 +14,13 @@ endif
 .PHONY: requirements develop build build-debug build-conda install
 
 requirements:  ## install python dev and runtime dependencies
+ifeq ($(OS),Windows_NT)
+	Powershell.exe -noprofile ./make_requirements.ps1
+else
 	python -m pip install toml
 	python -m pip install `python -c 'import toml; c = toml.load("pyproject.toml"); print("\n".join(c["build-system"]["requires"]))'`
 	python -m pip install `python -c 'import toml; c = toml.load("pyproject.toml"); print("\n".join(c["project"]["optional-dependencies"]["develop"]))'`
+endif
 
 develop: requirements  ## install dependencies and build library
 	python -m pip install -e .[develop]
