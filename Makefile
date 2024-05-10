@@ -35,7 +35,7 @@ build-conda:  ## build the library in Conda
 ifeq ($(OS),Windows_NT)
 	set CSP_USE_VCPKG=0 && python setup.py build build_ext --inplace
 else
-	CSP_USE_VCPKG=0 python setup.py build build_ext --inplace -- -j$(NPROC)
+	CSP_USE_VCPKG=0 python setup.py build build_ext --inplace -- -- -j$(NPROC)
 endif
 
 install:  ## install library
