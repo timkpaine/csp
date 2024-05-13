@@ -211,11 +211,13 @@ dependencies-debian:  ## install dependencies for linux
 dependencies-fedora:  ## install dependencies for linux
 	yum install -y automake bison ccache cmake curl flex perl-IPC-Cmd tar unzip zip
 
-dependencies-vcpkg:  ## install dependnecies via vcpkg
+dependencies-vcpkg:  ## install dependencies via vcpkg
 	cd vcpkg && ./bootstrap-vcpkg.sh && ./vcpkg install
 
-dependencies-win:  ## install dependnecies via windows (vcpkg)
+dependencies-win:  ## install dependencies via windows (vcpkg)
+	choco install cmake bison curl flex ninja tar unzip zip
 	cd vcpkg && ./bootstrap-vcpkg.bat && ./vcpkg install
+	
 
 ############################################################################################
 # Thanks to Francoise at marmelab.com for this
