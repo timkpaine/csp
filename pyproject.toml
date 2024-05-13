@@ -141,7 +141,7 @@ make requirements
 make dependencies-mac
 """
 archs = "x86_64"  # NOTE: we use gcc and we cannot cross compile for now
-environment = {}
+environment = {VERBOSE="1"}
 
 [tool.cibuildwheel.windows]
 before-all ="make dependencies-win"
