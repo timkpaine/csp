@@ -247,7 +247,9 @@ function(csp_autogen MODULE_NAME DEST_FILENAME HEADER_NAME_OUTVAR SOURCE_NAME_OU
         COMMAND ${CMAKE_COMMAND} -E env "PYTHONPATH=${PROJECT_BINARY_DIR}/lib:${CMAKE_SOURCE_DIR}:$$PYTHONPATH" "LD_LIBRARY_PATH=${PROJECT_BINARY_DIR}/lib:$$LD_LIBRARY_PATH}" ${Python_EXECUTABLE} ${CMAKE_SOURCE_DIR}/csp/build/csp_autogen.py -m ${MODULE_NAME} -d ${CMAKE_CURRENT_BINARY_DIR}/csp_autogen -o ${DEST_FILENAME} ${CSP_AUTOGEN_EXTRA_ARGS}
             COMMENT "generating csp c++ types from module ${MODULE_NAME} ${PROJECT_BINARY_DIR} ${CMAKE_SOURCE_DIR}/csp/build/csp_autogen.py"
             DEPENDS mkdir_autogen_${MODULE_NAME}
-            csptypesimpl )
+                    ${CMAKE_SOURCE_DIR}/csp/build/csp_autogen.py
+                    ${CMAKE_SOURCE_DIR}/${MODULE_FILENAME}
+                    csptypesimpl )
 
     #cmake_path(SET CSP_AUTOGEN_MODULE_PATH NORMALIZE "${CMAKE_SOURCE_DIR}/csp/build/csp_autogen.py")
     #cmake_path(SET CSP_AUTOGEN_DESTINATION_FOLDER NORMALIZE "${CMAKE_CURRENT_BINARY_DIR}/csp_autogen")
