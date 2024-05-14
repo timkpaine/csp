@@ -193,8 +193,13 @@ deep-clean: ## clean everything from the repository
 	git clean -fdx
 
 clean: ## clean the repository
+ifneq ($(OS),Windows_NT)
 	rm -rf .coverage coverage cover htmlcov logs build dist wheelhouse *.egg-info
 	rm -rf csp/lib csp/bin csp/include _skbuild
+else
+	del /s /q .coverage coverage cover htmlcov logs build dist wheelhouse *.egg-info
+	del /s/ q csp\lib csp\bin csp\include _skbuild
+endif
 
 ################
 # Dependencies #
