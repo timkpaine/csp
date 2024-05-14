@@ -1,11 +1,13 @@
 EXTRA_ARGS :=
 
+ifneq ($(OS),Windows_NT)
 UNAME := $(shell uname)
 ifeq ($(UNAME), Linux)
 NPROC = $(shell nproc)
 endif
 ifeq ($(UNAME), Darwin)
 NPROC = $(shell sysctl -n hw.physicalcpu)
+endif
 endif
 
 #########
