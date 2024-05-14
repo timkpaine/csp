@@ -222,7 +222,7 @@ dependencies-vcpkg:  ## install dependencies via vcpkg
 	cd vcpkg && ./bootstrap-vcpkg.sh && ./vcpkg install
 
 dependencies-win:  ## install dependencies via windows (vcpkg)
-	choco install cmake curl winflexbison ninja unzip zip
+	choco install cmake curl winflexbison ninja unzip zip --no-progress
 	cd vcpkg && ./bootstrap-vcpkg.bat && ./vcpkg install
 	
 
