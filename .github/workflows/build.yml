@@ -331,7 +331,8 @@ jobs:
           env:
             CIBW_BUILD: "${{ matrix.cibuildwheel }}-win_amd64"
             CMAKE_GENERATOR: Visual Studio 17 2022
-            CIBW_ENVIRONMENT_WINDOWS: VCPKG_DEFAULT_BINARY_CACHE="${{ env.VCPKG_DEFAULT_BINARY_CACHE }}" VCPKG_DOWNLOADS="${{ env.VCPKG_DOWNLOADS }}"
+            #CIBW_ENVIRONMENT_WINDOWS: VCPKG_DEFAULT_BINARY_CACHE="${{ env.VCPKG_DEFAULT_BINARY_CACHE }}" VCPKG_DOWNLOADS="${{ env.VCPKG_DOWNLOADS }}"
+            CIBW_ENVIRONMENT_WINDOWS: VCPKG_DEFAULT_BINARY_CACHE="C:\\Users\\runneradmin\\AppData\\Local\\vcpkg_cache" VCPKG_DOWNLOADS="C:\\Users\\runneradmin\\AppData\\Local\\vcpkg_download_cache"
           if: ${{ matrix.os == 'windows-2019' }}
 
         ##########
