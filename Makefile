@@ -17,7 +17,7 @@ endif
 
 requirements:  ## install python dev and runtime dependencies
 ifeq ($(OS),Windows_NT)
-	Powershell.exe -noprofile ./make_requirements.ps1
+	Powershell.exe -executionpolicy bypass -noprofile ./make_requirements.ps1
 else
 	python -m pip install toml
 	python -m pip install `python -c 'import toml; c = toml.load("pyproject.toml"); print("\n".join(c["build-system"]["requires"]))'`
