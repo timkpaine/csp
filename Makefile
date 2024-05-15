@@ -221,9 +221,8 @@ dependencies-fedora:  ## install dependencies for linux
 dependencies-vcpkg:  ## install dependencies via vcpkg
 	cd vcpkg && ./bootstrap-vcpkg.sh && ./vcpkg install
 
-dependencies-win:  ## install dependencies via windows (vcpkg)
+dependencies-win:  ## install dependencies via windows
 	choco install cmake curl winflexbison ninja unzip zip --no-progress -y
-	cd vcpkg && bootstrap-vcpkg.bat && vcpkg install --triplet="x64-windows-static-md"
 	
 
 ############################################################################################
