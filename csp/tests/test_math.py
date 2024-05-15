@@ -156,7 +156,7 @@ class TestMath(unittest.TestCase):
             eps = EPSILONS.get(op, None)
             if eps:
                 for v, x in zip(results[op.__name__], xv):
-                    self.assertAlmostEqual(v[1], comp(x), op.__name__, delta=eps)
+                    self.assertAlmostEqual(v[1], comp(x), msg=op.__name__, delta=eps)
             else:
                 self.assertEqual([v[1] for v in results[op.__name__]], [comp(x) for x in xv], op.__name__)
 
@@ -227,7 +227,7 @@ class TestMath(unittest.TestCase):
             eps = EPSILONS.get(op, None)
             if eps:
                 for v, x in zip(results[op.__name__], xv):
-                    self.assertAlmostEqual(v[1], comp(x), op.__name__, delta=eps)
+                    self.assertAlmostEqual(v[1], comp(x), msg=op.__name__, delta=eps)
             else:
                 self.assertEqual([v[1] for v in results[op.__name__]], [comp(x) for x in xv], op.__name__)
 

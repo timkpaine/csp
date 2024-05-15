@@ -506,6 +506,10 @@ jobs:
 
         ########
         # Windows
+        - name: Install test dependencies (Windows)
+          run: choco install graphviz --no-progress -y
+          if: ${{ runner.os == 'Windows' }}
+
         - name: Install wheel (windows)
           run: python -m pip install -U (Get-ChildItem .\*.whl | Select-Object -Expand FullName) --target .
           if: ${{ runner.os == 'Windows' }}
