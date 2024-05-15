@@ -143,7 +143,10 @@ make dependencies-mac
 archs = "x86_64"  # NOTE: we use gcc and we cannot cross compile for now
 
 [tool.cibuildwheel.windows]
-before-all ="make dependencies-win"
+before-all ="""
+make requirements
+make dependencies-win
+"""
 archs = "AMD64"
 skip = "*win32 *arm_64"
 environment = {VERBOSE="1", VCPKG_TRIPLET="x64-windows-static-md"}
