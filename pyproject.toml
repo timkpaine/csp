@@ -145,10 +145,10 @@ archs = "x86_64"  # NOTE: we use gcc and we cannot cross compile for now
 [tool.cibuildwheel.windows]
 before-all = "make dependencies-win"
 before-build = "make requirements"
+before-test = "choco install graphviz --no-progress -y"
 
 archs = "AMD64"
 skip = "*win32 *arm_64"
-environment = {VERBOSE="1", VCPKG_TRIPLET="x64-windows-static-md"}
 
 [tool.isort]
 combine_as_imports = true
