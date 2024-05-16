@@ -1067,13 +1067,18 @@ class TestEngine(unittest.TestCase):
 
         results = csp.run(graph, 4, False, starttime=datetime.utcnow(), endtime=timedelta(seconds=30), realtime=True)[0]
         self.assertEqual(len(results), 4)
+
         self.assertTrue(all((results[i][0] - results[i - 1][0]) == timer_interval for i in range(1, len(results))))
         # Assert lag from engine -> wallclock on last tick is greater than minimum expected amount
         self.assertGreater(results[-1][1] - results[-1][0], (delay - timer_interval) * len(results))
 
         results = csp.run(graph, 5, True, starttime=datetime.utcnow(), endtime=timedelta(seconds=30), realtime=True)[0]
         self.assertEqual(len(results), 5)
-        self.assertTrue(all((results[i][0] - results[i - 1][0]) > delay for i in range(2, len(results))))
+        eps = timedelta()
+        # Windows clock resolution is...
+        if sys.platform == "win32":
+            eps = timedelta(microseconds=1000)
+        self.assertTrue(all((results[i][0] - results[i - 1][0]) + eps > delay for i in range(2, len(results))))
 
     def test_timer_exception(self):
         with self.assertRaisesRegex(ValueError, "csp.timer interval must be > 0"):
