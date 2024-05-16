@@ -35,6 +35,8 @@ jobs:
             - ubuntu-22.04
             - macos-14
             - macos-12
+            - windows-2019
+
       runs-on: ${{ matrix.os }}
       steps:
         - name: Checkout
@@ -48,22 +50,54 @@ jobs:
               bash
             cache-environment: true
             post-cleanup: 'all'
+          if: ${{ matrix.os != 'windows-2019' }}
+
+        - uses: mamba-org/setup-micromamba@v1
+          with:
+            micromamba-version: '1.5.7-0'
+            environment-file: conda/dev-environment-win.yml
+            init-shell: >-
+                powershell
+            cache-environment: true
+            post-cleanup: 'all'
+          if: ${{ matrix.os == 'windows-2019' }}
 
         - name: Set up Caches
           uses: ./.github/actions/setup-caches
           with:
             cibuildwheel: 'cp312'
 
+        - name: Install make
+          run: |
+            choco install make -y
+          if: ${{ matrix.os == 'windows-2019' }}
+
         - name: Python Lint Steps
           run: make lint
           shell: micromamba-shell {0}
+          if: ${{ matrix.os != 'windows-2019' }}
 
         - name: Python Build Steps
           run: make build-conda
           shell: micromamba-shell {0}
+          if: ${{ matrix.os != 'windows-2019' }}
 
         - name: Python Test Steps
           run: make test
           shell: micromamba-shell {0}
+          if: ${{ matrix.os != 'windows-2019' }}
 
-       
+        - name: Python Lint Steps
+          run: make lint
+          shell: powershell
+          if: ${{ matrix.os == 'windows-2019' }}
+
+        - name: Python Build Steps
+          run: make build-conda
+          shell: powershell
+          if: ${{ matrix.os == 'windows-2019' }}
+
+        - name: Python Test Steps
+          run: make test
+          shell: powershell
+          if: ${{ matrix.os == 'windows-2019' }}
