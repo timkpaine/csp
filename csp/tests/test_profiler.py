@@ -109,8 +109,8 @@ class TestProfiler(unittest.TestCase):
         prof = p.results()
 
         epsilon = 0.0
-        if sys.platform == 'win32':
-            epsilon = 0.01 # Clock resolution on windows is pretty bad
+        if sys.platform == "win32":
+            epsilon = 0.01  # Clock resolution on windows is pretty bad
         self.assertGreater(prof.average_cycle_time, 1.0 - epsilon)
         self.assertGreater(prof.max_cycle_time, 1.0)
         self.assertGreater(prof.node_stats["sleep_for"]["total_time"], 2.0)
