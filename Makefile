@@ -8,6 +8,8 @@ endif
 ifeq ($(UNAME), Darwin)
 NPROC = $(shell sysctl -n hw.physicalcpu)
 endif
+else
+SHELL := pwsh.exe
 endif
 
 #########
@@ -15,16 +17,15 @@ endif
 #########
 .PHONY: requirements develop build build-debug build-conda install
 
-ifeq ($(OS),Windows_NT)
-requirements: $(eval SHELL:=pwsh.exe)  ## install python dev and runtime dependencies
-	python -m pip install toml
-	python -m pip install $(python -c "import toml; c = toml.load('pyproject.toml'); print('\n'.join(c['build-system']['requires']))")
-	python -m pip install $(python -c "import toml; c = toml.load('pyproject.toml'); print('\n'.join(c['project']['optional-dependencies']['develop']))")
-else
 requirements:  ## install python dev and runtime dependencies
+ifneq ($(OS),Windows_NT)
 	python -m pip install toml
 	python -m pip install `python -c 'import toml; c = toml.load("pyproject.toml"); print("\n".join(c["build-system"]["requires"]))'`
 	python -m pip install `python -c 'import toml; c = toml.load("pyproject.toml"); print("\n".join(c["project"]["optional-dependencies"]["develop"]))'`
+else
+	python -m pip install toml
+	python -m pip install $(python -c "import toml; c = toml.load('pyproject.toml'); print('\n'.join(c['build-system']['requires']))")
+	python -m pip install $(python -c "import toml; c = toml.load('pyproject.toml'); print('\n'.join(c['project']['optional-dependencies']['develop']))")
 endif
 
 develop: requirements  ## install dependencies and build library
@@ -98,8 +99,10 @@ TEST_ARGS :=
 test-py: ## Clean and Make unit tests
 	python -m pytest -v csp/tests --junitxml=junit.xml $(TEST_ARGS)
 
+test-cpp: $(eval SHELL)  ## Make C++ unit tests
 ifneq ($(OS),Windows_NT)
-test-cpp: $(eval SHELL:=pwsh.exe)  ## Make C++ unit tests
+	for f in ./csp/tests/bin/*; do $$f; done || (echo "TEST FAILED" && exit 1)
+else
 	@echo off
 	for %%X in (.\csp\tests\bin\*.exe) do (
 			echo Executing: %%X
@@ -109,9 +112,6 @@ test-cpp: $(eval SHELL:=pwsh.exe)  ## Make C++ unit tests
 		exit /b 1
 			)
 	)
-else
-test-cpp: ## Make C++ unit tests
-	for f in ./csp/tests/bin/*; do $$f; done || (echo "TEST FAILED" && exit 1)
 endif
 
 coverage-py:
