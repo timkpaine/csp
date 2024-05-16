@@ -15,10 +15,13 @@ endif
 #########
 .PHONY: requirements develop build build-debug build-conda install
 
-requirements:  ## install python dev and runtime dependencies
 ifeq ($(OS),Windows_NT)
-	Powershell.exe -executionpolicy bypass -noprofile ./make_requirements.ps1
+requirements: $(eval SHELL:=pwsh.exe)  ## install python dev and runtime dependencies
+	python -m pip install toml
+	python -m pip install $(python -c "import toml; c = toml.load('pyproject.toml'); print('\n'.join(c['build-system']['requires']))")
+	python -m pip install $(python -c "import toml; c = toml.load('pyproject.toml'); print('\n'.join(c['project']['optional-dependencies']['develop']))")
 else
+requirements:  ## install python dev and runtime dependencies
 	python -m pip install toml
 	python -m pip install `python -c 'import toml; c = toml.load("pyproject.toml"); print("\n".join(c["build-system"]["requires"]))'`
 	python -m pip install `python -c 'import toml; c = toml.load("pyproject.toml"); print("\n".join(c["project"]["optional-dependencies"]["develop"]))'`
@@ -28,21 +31,13 @@ develop: requirements  ## install dependencies and build library
 	python -m pip install -e .[develop]
 
 build:  ## build the library
-ifeq ($(OS),Windows_NT)
 	python setup.py build build_ext --inplace
-else
-	python setup.py build build_ext --inplace -- -- -j$(NPROC)
-endif
 
 build-debug:  ## build the library ( DEBUG ) - May need a make clean when switching from regular build to build-debug and vice versa
 	SKBUILD_CONFIGURE_OPTIONS="" DEBUG=1 python setup.py build build_ext --inplace -- -- -j$(NPROC)
 
-build-conda:  ## build the library in Conda
-ifeq ($(OS),Windows_NT)
-	set CSP_USE_VCPKG=0 && python setup.py build build_ext --inplace
-else
-	CSP_USE_VCPKG=0 python setup.py build build_ext --inplace -- -- -j$(NPROC)
-endif
+build-conda: export CSP_USE_VCPKG = 0  ## build the library in Conda
+	python setup.py build build_ext --inplace
 
 install:  ## install library
 	python -m pip install .
@@ -103,11 +98,20 @@ TEST_ARGS :=
 test-py: ## Clean and Make unit tests
 	python -m pytest -v csp/tests --junitxml=junit.xml $(TEST_ARGS)
 
-test-cpp: ## Make C++ unit tests
 ifneq ($(OS),Windows_NT)
-	for f in ./csp/tests/bin/*; do $$f; done || (echo "TEST FAILED" && exit 1)
+test-cpp: $(eval SHELL:=pwsh.exe)  ## Make C++ unit tests
+	@echo off
+	for %%X in (.\csp\tests\bin\*.exe) do (
+			echo Executing: %%X
+			call %%X
+			if errorlevel 1 (
+					echo Failed to execute: %%X
+		exit /b 1
+			)
+	)
 else
-	run_cpp_tests.bat
+test-cpp: ## Make C++ unit tests
+	for f in ./csp/tests/bin/*; do $$f; done || (echo "TEST FAILED" && exit 1)
 endif
 
 coverage-py:
@@ -223,7 +227,7 @@ dependencies-vcpkg:  ## install dependencies via vcpkg
 
 dependencies-win:  ## install dependencies via windows
 	choco install cmake curl winflexbison ninja unzip zip --no-progress -y
-	
+
 
 ############################################################################################
 # Thanks to Francoise at marmelab.com for this
