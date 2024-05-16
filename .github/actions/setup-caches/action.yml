@@ -36,8 +36,8 @@ runs:
       run: |
         mkdir -p /home/runner/work/vcpkg_cache
         mkdir -p /home/runner/work/vcpkg_download_cache
-        echo "VCPKG_DEFAULT_BINARY_CACHE=/home/runner/vcpkg_cache" >> $GITHUB_ENV
-        echo "VCPKG_DOWNLOADS=/home/runner/vcpkg_download_cache" >> $GITHUB_ENV
+        echo "VCPKG_DEFAULT_BINARY_CACHE=/home/runner/work/vcpkg_cache" >> $GITHUB_ENV
+        echo "VCPKG_DOWNLOADS=/home/runner/work/vcpkg_download_cache" >> $GITHUB_ENV
       if: ${{ runner.os == 'Linux' }}
 
     - name: Setup vcpkg cache (Linux)
