@@ -34,8 +34,8 @@ runs:
     - name: Setup vcpkg cache in shell (Linux)
       shell: bash
       run: |
-        mkdir -p /home/runner/vcpkg_cache
-        mkdir -p /home/runner/vcpkg_download_cache
+        mkdir -p /home/runner/work/vcpkg_cache
+        mkdir -p /home/runner/work/vcpkg_download_cache
         echo "VCPKG_DEFAULT_BINARY_CACHE=/home/runner/vcpkg_cache" >> $GITHUB_ENV
         echo "VCPKG_DOWNLOADS=/home/runner/vcpkg_download_cache" >> $GITHUB_ENV
       if: ${{ runner.os == 'Linux' }}
@@ -44,8 +44,8 @@ runs:
       uses: actions/cache@v4
       with:
         path: |
-          /home/runner/vcpkg_cache
-          /home/runner/vcpkg_download_cache
+          /home/runner/work/vcpkg_cache
+          /home/runner/work/vcpkg_download_cache
         key: vcpkg-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('vcpkg.json') }}
         restore-keys: vcpkg-${{ runner.os }}-${{ runner.arch }}-
       if: ${{ runner.os == 'Linux' }}
